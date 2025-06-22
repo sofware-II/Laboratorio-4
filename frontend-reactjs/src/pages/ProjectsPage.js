@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProjectsList from '../components/ProjectsList';
 import ConfirmModal from '../components/ConfirmModal';
-import { fetchProjects, deleteProject } from '../api/projects';
+import ProjectForm from '../components/ProjectForm';
+import { fetchProjects, deleteProject, createProject, updateProject } from '../api/projects';
 
 const ProjectsPage = () => {
   const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState(null);
+
 
   const loadProjects = () => {
     fetchProjects()
@@ -24,10 +28,6 @@ const ProjectsPage = () => {
     navigate(`/projects/${id}/tasks`);
   };
 
-  const handleEditClick = (project) => {
-    console.log('Edit project:', project);
-    // You can open a form here
-  };
 
   const handleDeleteClick = (project) => {
     setSelectedProject(project);
@@ -50,15 +50,66 @@ const ProjectsPage = () => {
     setSelectedProject(null);
   };
 
+  const handleCreateClick = () => {
+    setEditingProject(null);
+    setFormOpen(true);
+  };
+
+  const handleEditClick = (project) => {
+    setEditingProject(project);
+    setFormOpen(true);
+  };
+
+  const handleFormSubmit = (formData) => {
+    if (editingProject) {
+      updateProject(editingProject.id, formData)
+        .then(() => {
+          loadProjects();
+          setFormOpen(false);
+          setEditingProject(null);
+        })
+        .catch(console.error);
+    } else {
+      createProject(formData)
+        .then(() => {
+          loadProjects();
+          setFormOpen(false);
+        })
+        .catch(console.error);
+    }
+  };
+
+  const handleFormCancel = () => {
+    setFormOpen(false);
+    setEditingProject(null);
+  };
+
+
   return (
     <div>
       <h2>Projects</h2>
       <div className="container">
-        <ProjectsList
-          onSelect={handleProjectSelect}
-          onEdit={handleEditClick}
-          onDelete={handleDeleteClick}
-        />
+        {!formOpen && (
+          <button onClick={handleCreateClick} style={{ marginBottom: '1rem' }}>
+            + Add Project
+          </button>
+        )}
+          
+        {formOpen ? (
+          <ProjectForm
+            initialData={editingProject}
+            onSubmit={handleFormSubmit}
+            onCancel={handleFormCancel}
+          />
+        ) : (
+          <ProjectsList
+            projects={projects}
+            onSelect={handleProjectSelect}
+            onEdit={handleEditClick}
+            onDelete={handleDeleteClick}
+          />
+        )}
+        
         <ConfirmModal
           show={modalOpen}
           title="Confirm Deletion"

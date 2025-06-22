@@ -23,10 +23,10 @@ h1, h2 {
 /* Container */
 
 .container {
-  max-width: 960px;
+  max-width: 990px;
   margin: 2rem auto;
   padding: 0 0;
-  background: white;
+  background: transparent;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 }
@@ -64,7 +64,7 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #ececec;
+  background-color: #30cddf;
   color: white;
   transition: background-color 0.2s ease-in-out;
 }
@@ -176,3 +176,42 @@ button:disabled {
 .btn-delete:hover {
   opacity: 0.9;
 }
+
+
+.project-form {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+}
+
+.project-form input,
+.project-form textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.project-form button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.project-form .btn-cancel {
+  background-color: #9ca3af;
+}
+
+

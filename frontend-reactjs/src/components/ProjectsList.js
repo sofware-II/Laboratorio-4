@@ -2,15 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { fetchProjects } from '../api/projects';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
-const ProjectsList = ({ onSelect, onEdit, onDelete }) => {
-  const [projects, setProjects] = useState([]);
-
-  useEffect(() => {
-    fetchProjects()
-      .then((res) => setProjects(res.data))
-      .catch(console.error);
-  }, []);
-
+const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
+  
   return (
     <table className="project-table">
       <thead>
