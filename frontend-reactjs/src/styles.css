@@ -60,16 +60,17 @@ tbody tr:hover {
 button {
   font-size: 0.9rem;
   padding: 0.4rem 0.8rem;
+  margin: 1px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #2563eb;
+  background-color: #ececec;
   color: white;
   transition: background-color 0.2s ease-in-out;
 }
 
 button:hover {
-  background-color: #1e40af;
+  background-color: #45c1eb;
 }
 
 button:disabled {
@@ -116,4 +117,62 @@ button:disabled {
     font-weight: 600;
     text-align: left;
   }
+}
+
+/* Confirm Modal Styles */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  color: #333;
+  margin-right: 10px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background: #dc2626;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancel:hover,
+.btn-delete:hover {
+  opacity: 0.9;
 }
