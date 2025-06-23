@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ProjectsList from '../components/ProjectsList';
+import ProjectsList from '../components/projects/ProjectsList';
 import ConfirmModal from '../components/ConfirmModal';
-import ProjectForm from '../components/ProjectForm';
+import ProjectForm from '../components/projects/ProjectForm';
 import { fetchProjects, deleteProject, createProject, updateProject } from '../api/projects';
 
 const ProjectsPage = () => {
