@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchProjectById } from '../api/projects';
 import { fetchTasksByProject } from '../api/tasks';
-import TasksList from '../components/TasksList';
+import TasksList from '../components/tasks/TasksList';
 
 const TasksPage = () => {
   const { projectId } = useParams();

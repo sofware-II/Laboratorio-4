@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProjects } from '../api/projects';
+import { fetchProjects } from '../../api/projects';
 import { FiEdit, FiTrash2, FiEye} from 'react-icons/fi';
 
 const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
