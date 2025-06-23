@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchProjects } from '../api/projects';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiEye} from 'react-icons/fi';
 
 const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
   
@@ -38,6 +38,13 @@ const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
                   className="icon-btn"
                 >
                   <FiEdit size={18} color="#2563eb" />
+                </button>
+                <button
+                  title="View Tasks"
+                  onClick={() => onSelect(project.id)}
+                  className="icon-btn"
+                >
+                  <FiEye size={18} />
                 </button>
                 <button
                   title="Delete"
