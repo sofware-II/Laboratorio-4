@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.Layout_container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 16px;
+}
+
+
 body {
   margin: 0;
   padding-top: 30px;
@@ -37,7 +44,9 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 1rem;
+  overflow-x: auto;
 }
+
 
 thead tr {
   background-color: #f3f4f6;
@@ -58,7 +67,7 @@ tbody tr:hover {
 /* Buttons */
 
 button {
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding: 0.4rem 0.8rem;
   margin: 1px;
   border: none;

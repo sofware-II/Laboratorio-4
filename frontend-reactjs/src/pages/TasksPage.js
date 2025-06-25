@@ -90,7 +90,7 @@ const TasksPage = () => {
   };
 
   return (
-    <div>
+    <div className='Layout_container'>
       <h2>Project Tasks</h2>
       <div className="container">
         {project && (

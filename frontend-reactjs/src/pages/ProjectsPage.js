@@ -86,7 +86,7 @@ const ProjectsPage = () => {
 
 
   return (
-    <div>
+    <div className='Layout_container'>
       <h2>Projects</h2>
       <div className="container">
         {!formOpen && (
