@@ -147,7 +147,7 @@ mvn test
 
 ---
 
-🔐 How to Add Authentication
+### 🔐 How to Add Authentication
 
 To add authentication using JWT (JSON Web Tokens):
 
@@ -176,7 +176,7 @@ To add authentication using JWT (JSON Web Tokens):
 
 ---
 
-### 🐳 Docker Setup Instructions (Optional)
+### 🐳 Docker Setup Instructions
 To containerize both backend and frontend apps:
 
 1. Dockerfile for Backend
@@ -221,6 +221,14 @@ bash
 
 docker-compose up --build
 ```
+---
+### 🌐 Future Improvements
+## ✅ Internationalization with react-i18next
+To support multiple languages and improve accessibility, the frontend can be enhanced using react-i18next.
+This library offers powerful and flexible internationalization for React applications, with features like language detection, dynamic loading, and seamless integration with hooks and components.
+
+👉 To learn how to set it up, check the official guide here:
+https://react.i18next.com/latest/usetranslation-hook
 
 ---
 ### 📽 Demo Video
