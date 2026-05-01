@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class TaskServiceTest {
@@ -179,4 +180,33 @@ public class TaskServiceTest {
 
         verify(taskRepository).existsById(1L);
     }
+
+    @Test
+    void testUpdateTask_NotFound() {
+    TaskDto updateDto = new TaskDto(null, "Updated Task", null, "IN_PROGRESS", "HIGH", 10L);
+
+    when(taskRepository.findById(99L)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> taskService.updateTask(99L, updateDto))
+            .isInstanceOf(ResourceNotFoundException.class)
+            .hasMessageContaining("Task not found with ID: 99");
+
+    verify(taskRepository).findById(99L);
+    verify(taskRepository, never()).save(any());
+    }
+
+    @Test
+    void testGetTasksByProjectId_EmptyList() {
+    when(taskRepository.findByProjectId(10L)).thenReturn(List.of());
+
+    List<TaskDto> tasks = taskService.getTasksByProjectId(10L);
+
+    assertThat(tasks).isEmpty();
+
+    verify(taskRepository).findByProjectId(10L);
+    verify(taskMapper, never()).toDto(any(Task.class));
+    }
 }
+
+
+    
