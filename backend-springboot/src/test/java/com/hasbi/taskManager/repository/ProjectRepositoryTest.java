@@ -27,6 +27,18 @@ class ProjectRepositoryTest {
     private ProjectRepository projectRepository;
 
     @Test
+    void shouldSaveProjectAndAssignId() {
+        Project project = new Project();
+        project.setName("Proyecto 1");
+        project.setDescription("Descripción 1");
+
+        Project savedProject = projectRepository.save(project);
+
+        assertThat(savedProject.getId()).isNotNull();
+        assertThat(savedProject.getName()).isEqualTo("Proyecto 1");
+    }
+
+    @Test
     void shouldFindProjectById() {
         Project project = new Project();
         project.setName("Proyecto Test");
