@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { fetchProjects } from '../../api/projects';
+import React from 'react';
 import { FiEdit, FiTrash2, FiEye} from 'react-icons/fi';
 
 const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
