@@ -48,20 +48,26 @@ class ProjectServiceTest {
         ProjectDto result = projectService.createProject(projectDto);
 
         assertNotNull(result);
+        assertEquals(projectDto.getId(), result.getId());
         assertEquals(projectDto.getName(), result.getName());
         verify(projectRepository).save(project);
     }
 
     @Test
     void getAllProjects_ShouldReturnListOfDtos() {
-        List<Project> projects = Arrays.asList(project);
+        Project project2 = new Project(2L, "Test Project 2", "Test Description 2");
+        ProjectDto projectDto2 = new ProjectDto(2L, "Test Project 2", "Test Description 2");
+        List<Project> projects = Arrays.asList(project, project2);
+
         when(projectRepository.findAll()).thenReturn(projects);
         when(projectMapper.toDto(project)).thenReturn(projectDto);
+        when(projectMapper.toDto(project2)).thenReturn(projectDto2);
 
         List<ProjectDto> result = projectService.getAllProjects();
 
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
         assertEquals(projectDto.getName(), result.get(0).getName());
+        assertEquals(projectDto2.getName(), result.get(1).getName());
     }
 
     @Test
@@ -77,9 +83,9 @@ class ProjectServiceTest {
 
     @Test
     void getProjectById_WhenNotFound_ShouldThrowException() {
-        when(projectRepository.findById(1L)).thenReturn(Optional.empty());
+        when(projectRepository.findById(999L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> projectService.getProjectById(1L));
+        assertThrows(ResourceNotFoundException.class, () -> projectService.getProjectById(999L));
     }
 
     @Test
@@ -116,8 +122,8 @@ class ProjectServiceTest {
 
     @Test
     void deleteProject_WhenNotExists_ShouldThrowException() {
-        when(projectRepository.existsById(1L)).thenReturn(false);
+        when(projectRepository.existsById(999L)).thenReturn(false);
 
-        assertThrows(ResourceNotFoundException.class, () -> projectService.deleteProject(1L));
+        assertThrows(ResourceNotFoundException.class, () -> projectService.deleteProject(999L));
     }
 }
