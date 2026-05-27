@@ -1,8 +1,8 @@
-# Lab 05 — Selenium WebDriver + JUnit
+# Lab 05 — Pruebas funcionales de proyectos
 
-Configuración base de pruebas funcionales con **Selenium 4.26** y **JUnit 5** para Task Manager.
+Pruebas funcionales con **Selenium 4.26** y **JUnit 5** para el módulo **consulta y mantenimiento de proyectos** (Integrante 5).
 
-Esta rama contiene solo la **infraestructura Selenium** y pruebas de navegación inicial.
+Incluye la infraestructura Selenium base más los casos del módulo.
 
 ## Contenido
 
@@ -10,9 +10,11 @@ Esta rama contiene solo la **infraestructura Selenium** y pruebas de navegación
 functional-tests/
 ├── pom.xml
 ├── .gitignore
+├── docs/casos-de-prueba-proyectos.md
 └── src/test/java/dev/selenium/
     ├── support/WebDriverFactory.java
-    └── getting_started/UsingSeleniumXUnitTest.java
+    ├── getting_started/UsingSeleniumXUnitTest.java
+    └── projects/ProjectMaintenanceFunctionalTest.java
 ```
 
 ## Prerrequisitos
@@ -25,9 +27,17 @@ functional-tests/
 
 ## Ejecución
 
+Solo pruebas del módulo proyectos:
+
 ```bash
 export JAVA_HOME="/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home"
 cd functional-tests
+mvn test -Dtest=ProjectMaintenanceFunctionalTest
+```
+
+Todas las pruebas (navegación + proyectos):
+
+```bash
 mvn test
 ```
 
@@ -37,6 +47,15 @@ Con navegador visible:
 mvn test -Dselenium.headless=false
 ```
 
-## Próximo paso
+## Casos cubiertos
 
-Tras mergear esta base en `desarrollo`, agregar en otra rama las pruebas funcionales del módulo **consulta y mantenimiento de proyectos** (Integrante 5).
+| Tipo | Tests |
+|------|-------|
+| Consulta | listado, navegación a tareas del proyecto |
+| Mantenimiento | editar, actualizar, eliminar, cancelar eliminación |
+
+Detalle en [docs/casos-de-prueba-proyectos.md](docs/casos-de-prueba-proyectos.md).
+
+## Dependencia
+
+Esta rama parte de la infraestructura Selenium en `feature/lab-05-selenium-setup` (PR a `desarrollo`).
