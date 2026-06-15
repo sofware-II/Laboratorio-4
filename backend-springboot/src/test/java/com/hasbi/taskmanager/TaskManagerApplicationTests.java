@@ -1,5 +1,7 @@
 package com.hasbi.taskmanager;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +12,6 @@ class TaskManagerApplicationTests {
 
     @Test
     void contextLoads() {
-          // Test desactivado temporalmente porque el contexto de Spring requiere configuración adicional.
+        assertNotNull(TaskManagerApplication.class);
     }
-
 }
