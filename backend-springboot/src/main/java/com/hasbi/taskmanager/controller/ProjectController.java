@@ -17,8 +17,7 @@ public class ProjectController {
 
     @PostMapping("/add")
     public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectDto projectDto) {
-        ProjectDto project = projectService.createProject(projectDto);
-        return ResponseEntity.ok(project);
+        return ResponseEntity.ok(projectService.createProject(projectDto));
     }
 
     @GetMapping("/all")

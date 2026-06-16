@@ -17,8 +17,7 @@ public class TaskController {
 
     @PostMapping("/add")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
-        TaskDto created = taskService.createTask(taskDto);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(taskService.createTask(taskDto));
     }
 
     @GetMapping("/project/{projectId}")

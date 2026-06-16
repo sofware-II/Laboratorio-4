@@ -27,8 +27,9 @@ public class TaskServiceImpl implements TaskService {
     private ProjectRepository projectRepository;
     private TaskMapper taskMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
+    private TaskValidator taskValidator;
 
+    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     @Override
     public TaskDto createTask(TaskDto taskDto) {
@@ -71,32 +72,28 @@ public class TaskServiceImpl implements TaskService {
         Task existingTask = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with ID: " + id));
 
-        if (taskDto.getTitle() != null) {
-            existingTask.setTitle(taskDto.getTitle());
-        }
-        if (taskDto.getDescription() != null) {
-            existingTask.setDescription(taskDto.getDescription());
-        }
-        if(taskDto.getStatus() != null){
-            try {
-                existingTask.setStatus(TaskStatus.valueOf(taskDto.getStatus()));
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid task status: " + taskDto.getStatus());
-            }
-        }
-        if(taskDto.getPriority() != null){
-            try {
-                existingTask.setPriority(TaskPriority.valueOf(taskDto.getPriority()));
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Invalid task priority: " + taskDto.getPriority());
-            }
-        }
+        updateTaskProperties(existingTask, taskDto);
 
         Task updated = taskRepository.save(existingTask);
 
         logger.info("Updated task ID {}", updated.getId());
 
         return taskMapper.toDto(updated);
+    }
+
+    private void updateTaskProperties(Task existingTask, TaskDto taskDto) {
+        if (taskDto.getTitle() != null) {
+            existingTask.setTitle(taskDto.getTitle());
+        }
+        if (taskDto.getDescription() != null) {
+            existingTask.setDescription(taskDto.getDescription());
+        }
+        if (taskDto.getStatus() != null) {
+            existingTask.setStatus(taskValidator.validateAndGetStatus(taskDto.getStatus()));
+        }
+        if (taskDto.getPriority() != null) {
+            existingTask.setPriority(taskValidator.validateAndGetPriority(taskDto.getPriority()));
+        }
     }
 
     @Override

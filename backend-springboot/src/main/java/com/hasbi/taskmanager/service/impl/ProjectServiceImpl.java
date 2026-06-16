@@ -61,18 +61,22 @@ public class ProjectServiceImpl implements ProjectService {
         Project existingProject = projectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + id));
 
-        if (projectDto.getName() != null) {
-            existingProject.setName(projectDto.getName());
-        }
-        if (projectDto.getDescription() != null) {
-            existingProject.setDescription(projectDto.getDescription());
-        }
+        updateProjectProperties(existingProject, projectDto);
 
         Project updated = projectRepository.save(existingProject);
 
         logger.info("Updated project ID {}", updated.getId());
 
         return projectMapper.toDto(updated);
+    }
+
+    private void updateProjectProperties(Project existingProject, ProjectDto projectDto) {
+        if (projectDto.getName() != null) {
+            existingProject.setName(projectDto.getName());
+        }
+        if (projectDto.getDescription() != null) {
+            existingProject.setDescription(projectDto.getDescription());
+        }
     }
 
     @Override

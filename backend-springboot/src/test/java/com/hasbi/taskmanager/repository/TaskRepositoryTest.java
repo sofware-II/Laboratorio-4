@@ -32,44 +32,49 @@ class TaskRepositoryTest {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @Test
-    void shouldFindTaskById() {
+    // Helper methods to eliminate duplication
+    private Project createTestProject(String name) {
         Project project = new Project();
-        project.setName("Proyecto Test");
-        Project savedProject = projectRepository.save(project);
+        project.setName(name);
+        return projectRepository.save(project);
+    }
 
+    private Task createTestTask(String title, String description, Project project) {
         Task task = new Task();
-        task.setTitle("Test Task");
-        task.setDescription("Test Desc");
+        task.setTitle(title);
+        task.setDescription(description);
         task.setStatus(TaskStatus.TODO);
         task.setPriority(TaskPriority.MEDIUM);
-        task.setProject(savedProject);
+        task.setProject(project);
+        return task;
+    }
 
+    @Test
+    void shouldFindTaskById() {
+        // Arrange
+        Project savedProject = createTestProject("Proyecto Test");
+        Task task = createTestTask("Test Task", "Test Desc", savedProject);
         Task savedTask = taskRepository.save(task);
 
+        // Act
         Optional<Task> result = taskRepository.findById(savedTask.getId());
 
+        // Assert
         assertThat(result).isPresent();
         assertThat(result.get().getTitle()).isEqualTo("Test Task");
     }
 
     @Test
     void shouldFindTasksByProjectId() {
-        Project project = new Project();
-        project.setName("Proyecto Test");
-        Project savedProject = projectRepository.save(project);
-
-        Task task = new Task();
-        task.setTitle("Task by Project");
-        task.setDescription("Task Desc");
-        task.setStatus(TaskStatus.TODO);
-        task.setPriority(TaskPriority.MEDIUM);
-        task.setProject(savedProject);
-
+        // Arrange
+        Project savedProject = createTestProject("Proyecto Test");
+        Task task = createTestTask("Task by Project", "Task Desc", savedProject);
         taskRepository.save(task);
 
+        // Act
         List<Task> tasks = taskRepository.findByProjectId(savedProject.getId());
 
+        // Assert
         assertThat(tasks).isNotEmpty();
         assertThat(tasks).hasSize(1);
         assertThat(tasks.get(0).getTitle()).isEqualTo("Task by Project");
@@ -77,21 +82,15 @@ class TaskRepositoryTest {
 
     @Test
     void shouldReturnTrueWhenTaskExistsById() {
-        Project project = new Project();
-        project.setName("Proyecto Test");
-        Project savedProject = projectRepository.save(project);
-
-        Task task = new Task();
-        task.setTitle("Existing Task");
-        task.setDescription("Existing Desc");
-        task.setStatus(TaskStatus.TODO);
-        task.setPriority(TaskPriority.MEDIUM);
-        task.setProject(savedProject);
-
+        // Arrange
+        Project savedProject = createTestProject("Proyecto Test");
+        Task task = createTestTask("Existing Task", "Existing Desc", savedProject);
         Task savedTask = taskRepository.save(task);
 
+        // Act
         boolean exists = taskRepository.existsById(savedTask.getId());
 
+        // Assert
         assertThat(exists).isTrue();
     }
 }
