@@ -58,7 +58,7 @@ class TaskControllerTest {
         when(taskService.createTask(Mockito.any(TaskDto.class))).thenReturn(response);
 
         // Act + Assert
-        mockMvc.perform(post("/tasks/add")
+        mockMvc.perform(post(ApiPaths.TASKS + ApiPaths.TASKS_ADD)
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ class TaskControllerTest {
         when(taskService.getTasksByProjectId(10L)).thenReturn(List.of(taskDto));
 
         // Act + Assert
-        mockMvc.perform(get("/tasks/project/10"))
+        mockMvc.perform(get(ApiPaths.TASKS + "/project/10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].title").value("Test Task"))
@@ -114,7 +114,7 @@ class TaskControllerTest {
         when(taskService.getTaskById(1L)).thenReturn(taskDto);
 
         // Act + Assert
-        mockMvc.perform(get("/tasks/1"))
+        mockMvc.perform(get(ApiPaths.TASKS + "/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.title").value("Test Task"))
@@ -150,7 +150,7 @@ class TaskControllerTest {
         when(taskService.updateTask(Mockito.eq(1L), Mockito.any(TaskDto.class))).thenReturn(response);
 
         // Act + Assert
-        mockMvc.perform(put("/tasks/update/1")
+        mockMvc.perform(put(ApiPaths.TASKS + "/update/1")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -167,7 +167,7 @@ class TaskControllerTest {
     @Test
     void shouldDeleteTask() throws Exception {
         // Act + Assert
-        mockMvc.perform(delete("/tasks/delete/1"))
+        mockMvc.perform(delete(ApiPaths.TASKS + "/delete/1"))
                 .andExpect(status().isNoContent());
 
         verify(taskService).deleteTask(1L);
