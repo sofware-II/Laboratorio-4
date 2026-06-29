@@ -19,11 +19,12 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
-    private ProjectRepository projectRepository;
-    private ProjectMapper projectMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
+    private static final String PROJECT_NOT_FOUND_MESSAGE = "Project not found with ID: ";
 
+    private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
@@ -37,9 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> getAllProjects() {
-        List<ProjectDto> projects = projectRepository.findAll().stream()
-                .map(projectMapper::toDto)
-                .collect(Collectors.toList());
+        List<ProjectDto> projects = mapProjectsToDtos(projectRepository.findAll());
 
         logger.info("Fetched {} projects", projects.size());
 
@@ -47,41 +46,67 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto getProjectById(Long id) {
-        Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + id));
+    public ProjectDto getProjectById(Long projectId) {
+        Project project = findProjectById(projectId);
 
-        logger.info("Retrieved project with ID {}", id);
+        logger.info("Retrieved project with ID {}", projectId);
 
         return projectMapper.toDto(project);
     }
 
     @Override
-    public ProjectDto updateProject(Long id, ProjectDto projectDto) {
-        Project existingProject = projectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + id));
+    public ProjectDto updateProject(Long projectId, ProjectDto projectDto) {
+        Project existingProject = findProjectById(projectId);
 
-        if (projectDto.getName() != null) {
-            existingProject.setName(projectDto.getName());
-        }
-        if (projectDto.getDescription() != null) {
-            existingProject.setDescription(projectDto.getDescription());
-        }
+        updateProjectFields(existingProject, projectDto);
 
-        Project updated = projectRepository.save(existingProject);
+        Project updatedProject = projectRepository.save(existingProject);
 
-        logger.info("Updated project ID {}", updated.getId());
+        logger.info("Updated project ID {}", updatedProject.getId());
 
-        return projectMapper.toDto(updated);
+        return projectMapper.toDto(updatedProject);
     }
 
     @Override
-    public void deleteProject(Long id) {
-        if (!projectRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Project not found with ID: " + id);
-        }
-        projectRepository.deleteById(id);
+    public void deleteProject(Long projectId) {
+        validateProjectExists(projectId);
 
-        logger.info("Deleted project ID {}", id);
+        projectRepository.deleteById(projectId);
+
+        logger.info("Deleted project ID {}", projectId);
+    }
+
+    private Project findProjectById(Long projectId) {
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException(PROJECT_NOT_FOUND_MESSAGE + projectId));
+    }
+
+    private void validateProjectExists(Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            throw new ResourceNotFoundException(PROJECT_NOT_FOUND_MESSAGE + projectId);
+        }
+    }
+
+    private List<ProjectDto> mapProjectsToDtos(List<Project> projects) {
+        return projects.stream()
+                .map(projectMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private void updateProjectFields(Project existingProject, ProjectDto projectDto) {
+        updateProjectName(existingProject, projectDto);
+        updateProjectDescription(existingProject, projectDto);
+    }
+
+    private void updateProjectName(Project existingProject, ProjectDto projectDto) {
+        if (projectDto.getName() != null) {
+            existingProject.setName(projectDto.getName());
+        }
+    }
+
+    private void updateProjectDescription(Project existingProject, ProjectDto projectDto) {
+        if (projectDto.getDescription() != null) {
+            existingProject.setDescription(projectDto.getDescription());
+        }
     }
 }
