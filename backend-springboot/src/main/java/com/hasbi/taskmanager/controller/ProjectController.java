@@ -15,10 +15,9 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
-
     @PostMapping(ApiPaths.PROJECTS_ADD)
     public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody ProjectDto projectDto) {
-        return ControllerResponseBuilder.ok(projectService.createProject(projectDto));
+      return ControllerResponseBuilder.ok(projectService.createProject(projectDto));
     }
 
     @GetMapping(ApiPaths.PROJECTS_ALL)

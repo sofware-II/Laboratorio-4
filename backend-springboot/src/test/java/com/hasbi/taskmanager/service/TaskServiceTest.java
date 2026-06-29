@@ -32,6 +32,9 @@ public class TaskServiceTest {
     @Mock
     private TaskMapper taskMapper;
 
+    @Mock
+    private TaskValidator taskValidator;
+
     @InjectMocks
     private TaskServiceImpl taskService;
 
@@ -124,6 +127,8 @@ public class TaskServiceTest {
         TaskDto updateDto = new TaskDto(null, "Updated Task", null, "IN_PROGRESS", "HIGH", 10L);
 
         when(taskRepository.findById(1L)).thenReturn(Optional.of(taskEntity));
+        when(taskValidator.validateAndGetStatus("IN_PROGRESS")).thenReturn(TaskStatus.IN_PROGRESS);
+        when(taskValidator.validateAndGetPriority("HIGH")).thenReturn(TaskPriority.HIGH);
         when(taskRepository.save(any(Task.class))).thenReturn(taskEntity);
         when(taskMapper.toDto(taskEntity)).thenReturn(taskDto);
 
@@ -138,6 +143,8 @@ public class TaskServiceTest {
         TaskDto updateDto = new TaskDto(null, null, null, "INVALID_STATUS", null, null);
 
         when(taskRepository.findById(1L)).thenReturn(Optional.of(taskEntity));
+        when(taskValidator.validateAndGetStatus("INVALID_STATUS"))
+            .thenThrow(new IllegalArgumentException("Invalid task status: INVALID_STATUS"));
 
         assertThatThrownBy(() -> taskService.updateTask(1L, updateDto))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -152,6 +159,9 @@ public class TaskServiceTest {
         TaskDto updateDto = new TaskDto(null, null, null, "TODO", "INVALID_PRIORITY", null);
 
         when(taskRepository.findById(1L)).thenReturn(Optional.of(taskEntity));
+        when(taskValidator.validateAndGetStatus("TODO")).thenReturn(TaskStatus.TODO);
+        when(taskValidator.validateAndGetPriority("INVALID_PRIORITY"))
+            .thenThrow(new IllegalArgumentException("Invalid task priority: INVALID_PRIORITY"));
 
         assertThatThrownBy(() -> taskService.updateTask(1L, updateDto))
                 .isInstanceOf(IllegalArgumentException.class)

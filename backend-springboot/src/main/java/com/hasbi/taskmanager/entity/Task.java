@@ -28,4 +28,15 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+
+    // Patrón: Replace Constructor with Factory Method
+    public static Task createNewTask(String title, String description, Project project) {
+        Task task = new Task();
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setStatus(TaskStatus.TODO);
+        task.setPriority(TaskPriority.MEDIUM);
+        task.setProject(project);
+        return task;
+    }
 }

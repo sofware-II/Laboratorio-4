@@ -26,28 +26,37 @@ class ProjectRepositoryTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    // Helper method to eliminate duplication
+    private Project createTestProject(String name, String description) {
+        Project project = new Project();
+        project.setName(name);
+        project.setDescription(description);
+        return project;
+    }
+
     @Test
     void shouldSaveProjectAndAssignId() {
-        Project project = new Project();
-        project.setName("Proyecto 1");
-        project.setDescription("Descripción 1");
+        // Arrange
+        Project project = createTestProject("Proyecto 1", "Descripción 1");
 
+        // Act
         Project savedProject = projectRepository.save(project);
 
+        // Assert
         assertThat(savedProject.getId()).isNotNull();
         assertThat(savedProject.getName()).isEqualTo("Proyecto 1");
     }
 
     @Test
     void shouldFindProjectById() {
-        Project project = new Project();
-        project.setName("Proyecto Test");
-        project.setDescription("Descripción Test");
-
+        // Arrange
+        Project project = createTestProject("Proyecto Test", "Descripción Test");
         Project savedProject = projectRepository.save(project);
 
+        // Act
         Optional<Project> result = projectRepository.findById(savedProject.getId());
 
+        // Assert
         assertThat(result).isPresent();
         assertThat(result.get().getName()).isEqualTo("Proyecto Test");
         assertThat(result.get().getDescription()).isEqualTo("Descripción Test");
@@ -55,19 +64,16 @@ class ProjectRepositoryTest {
 
     @Test
     void shouldFindAllProjects() {
-        Project project1 = new Project();
-        project1.setName("Proyecto 1");
-        project1.setDescription("Descripción 1");
-
-        Project project2 = new Project();
-        project2.setName("Proyecto 2");
-        project2.setDescription("Descripción 2");
-
+        // Arrange
+        Project project1 = createTestProject("Proyecto 1", "Descripción 1");
+        Project project2 = createTestProject("Proyecto 2", "Descripción 2");
         projectRepository.save(project1);
         projectRepository.save(project2);
 
+        // Act
         List<Project> projects = projectRepository.findAll();
 
+        // Assert
         assertThat(projects).hasSize(2);
         assertThat(projects).extracting(Project::getName)
                 .containsExactlyInAnyOrder("Proyecto 1", "Proyecto 2");
@@ -75,18 +81,18 @@ class ProjectRepositoryTest {
 
     @Test
     void shouldUpdateProject() {
-        Project project = new Project();
-        project.setName("Nombre original");
-        project.setDescription("Descripción original");
-
+        // Arrange
+        Project project = createTestProject("Nombre original", "Descripción original");
         Project savedProject = projectRepository.save(project);
 
         savedProject.setName("Nombre actualizado");
         savedProject.setDescription("Descripción actualizada");
-        Project updatedProject = projectRepository.save(savedProject);
 
+        // Act
+        Project updatedProject = projectRepository.save(savedProject);
         Optional<Project> result = projectRepository.findById(updatedProject.getId());
 
+        // Assert
         assertThat(result).isPresent();
         assertThat(result.get().getName()).isEqualTo("Nombre actualizado");
         assertThat(result.get().getDescription()).isEqualTo("Descripción actualizada");
@@ -94,30 +100,29 @@ class ProjectRepositoryTest {
 
     @Test
     void shouldDeleteProject() {
-        Project project = new Project();
-        project.setName("Proyecto a eliminar");
-        project.setDescription("Descripción");
-
+        // Arrange
+        Project project = createTestProject("Proyecto a eliminar", "Descripción");
         Project savedProject = projectRepository.save(project);
         Long projectId = savedProject.getId();
 
+        // Act
         projectRepository.deleteById(projectId);
-
         Optional<Project> result = projectRepository.findById(projectId);
 
+        // Assert
         assertThat(result).isEmpty();
     }
 
     @Test
     void shouldReturnTrueWhenProjectExistsById() {
-        Project project = new Project();
-        project.setName("Proyecto existente");
-        project.setDescription("Descripción");
-
+        // Arrange
+        Project project = createTestProject("Proyecto existente", "Descripción");
         Project savedProject = projectRepository.save(project);
 
+        // Act
         boolean exists = projectRepository.existsById(savedProject.getId());
 
+        // Assert
         assertThat(exists).isTrue();
     }
 }

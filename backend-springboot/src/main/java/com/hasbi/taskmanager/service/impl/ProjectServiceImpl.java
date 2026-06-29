@@ -58,13 +58,22 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectDto updateProject(Long projectId, ProjectDto projectDto) {
         Project existingProject = findProjectById(projectId);
 
-        updateProjectFields(existingProject, projectDto);
+     updateProjectFields(existingProject, projectDto);
 
         Project updatedProject = projectRepository.save(existingProject);
 
         logger.info("Updated project ID {}", updatedProject.getId());
 
         return projectMapper.toDto(updatedProject);
+    }
+
+    private void updateProjectProperties(Project existingProject, ProjectDto projectDto) {
+        if (projectDto.getName() != null) {
+            existingProject.setName(projectDto.getName());
+        }
+        if (projectDto.getDescription() != null) {
+            existingProject.setDescription(projectDto.getDescription());
+        }
     }
 
     @Override
