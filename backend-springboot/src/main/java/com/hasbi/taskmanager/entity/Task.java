@@ -2,6 +2,7 @@ package com.hasbi.taskmanager.entity;
 
 import com.hasbi.taskmanager.enums.TaskPriority;
 import com.hasbi.taskmanager.enums.TaskStatus;
+import com.hasbi.taskmanager.project.domain.model.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
