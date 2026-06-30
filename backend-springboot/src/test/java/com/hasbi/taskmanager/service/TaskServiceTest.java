@@ -4,6 +4,7 @@ import com.hasbi.taskmanager.dto.TaskDto;
 import com.hasbi.taskmanager.entity.Project;
 import com.hasbi.taskmanager.entity.Task;
 import com.hasbi.taskmanager.enums.TaskPriority;
+import com.hasbi.taskmanager.validator.TaskValidator;
 import com.hasbi.taskmanager.enums.TaskStatus;
 import com.hasbi.taskmanager.exception.ResourceNotFoundException;
 import com.hasbi.taskmanager.mapper.TaskMapper;
