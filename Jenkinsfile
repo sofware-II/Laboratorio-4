@@ -87,17 +87,19 @@ pipeline {
         }
 
         stage('Performance Tests - JMeter') {
-            when {
-                expression {
-                    return params.RUN_JMETER && fileExists('performance-tests/task-manager-performance.jmx')
+             when {
+                 expression {
+                    return params.RUN_JMETER && fileExists('jmeter/taskmanager-jmeter-final.jmx')
                 }
-            }
-            steps {
-                bat '''
-                jmeter -n -t performance-tests/task-manager-performance.jmx -l docs/performance/results.jtl
-                '''
-            }
-        }
+         }
+         steps {
+             bat '''
+             if not exist docs\\performance mkdir docs\\performance
+             if exist docs\\performance\\html-report rmdir /s /q docs\\performance\\html-report
+            "C:\\tools\\apache-jmeter-5.6.3\\bin\\jmeter.bat" -n -t jmeter\\taskmanager-jmeter-final.jmx -l docs\\performance\\results.jtl -e -o docs\\performance\\html-report
+        '''
+    }
+}
 
         stage('Docker Build') {
             when {
