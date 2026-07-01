@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
-const TasksList = ({ tasks, onEdit, onDelete }) => {
+const TasksList = ({ tasks = [], onEdit, onDelete }) => {
   if (!tasks || tasks.length === 0) {
     return <p>No tasks found.</p>;
   }
@@ -43,6 +44,12 @@ const TasksList = ({ tasks, onEdit, onDelete }) => {
       </tbody>
     </table>
   );
+};
+
+TasksList.propTypes = {
+  tasks: PropTypes.array,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default TasksList;

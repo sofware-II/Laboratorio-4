@@ -1,8 +1,9 @@
-package com.hasbi.taskmanager.controller;
+package com.hasbi.taskmanager.project.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hasbi.taskmanager.dto.ProjectDto;
-import com.hasbi.taskmanager.service.ProjectService;
+import com.hasbi.taskmanager.project.application.dto.ProjectDto;
+import com.hasbi.taskmanager.project.application.service.ProjectService;
+import com.hasbi.taskmanager.controller.ApiPaths;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ class ProjectControllerTest {
         when(projectService.getAllProjects()).thenReturn(List.of(project));
 
         // Act + Assert
-        mockMvc.perform(get("/projects/all"))
+        mockMvc.perform(get(ApiPaths.PROJECTS + ApiPaths.PROJECTS_ALL))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("Proyecto 1"))
@@ -59,7 +60,7 @@ class ProjectControllerTest {
         when(projectService.getProjectById(1L)).thenReturn(project);
 
         // Act + Assert
-        mockMvc.perform(get("/projects/1"))
+        mockMvc.perform(get(ApiPaths.PROJECTS + "/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.name").value("Proyecto 1"))
@@ -78,7 +79,7 @@ class ProjectControllerTest {
                 .thenReturn(response);
 
         // Act + Assert
-        mockMvc.perform(put("/projects/update/1")
+        mockMvc.perform(put(ApiPaths.PROJECTS + "/update/1")
                         .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -95,7 +96,7 @@ class ProjectControllerTest {
         doNothing().when(projectService).deleteProject(1L);
 
         // Act + Assert
-        mockMvc.perform(delete("/projects/delete/1"))
+        mockMvc.perform(delete(ApiPaths.PROJECTS + "/delete/1"))
                 .andExpect(status().isNoContent());
 
         verify(projectService).deleteProject(1L);

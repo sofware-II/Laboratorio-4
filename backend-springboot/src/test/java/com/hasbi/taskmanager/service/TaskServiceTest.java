@@ -1,17 +1,20 @@
 package com.hasbi.taskmanager.service;
 
 import com.hasbi.taskmanager.dto.TaskDto;
-import com.hasbi.taskmanager.entity.Project;
+import com.hasbi.taskmanager.project.domain.model.Project;
 import com.hasbi.taskmanager.entity.Task;
 import com.hasbi.taskmanager.enums.TaskPriority;
+import com.hasbi.taskmanager.validator.TaskValidator;
 import com.hasbi.taskmanager.enums.TaskStatus;
 import com.hasbi.taskmanager.exception.ResourceNotFoundException;
 import com.hasbi.taskmanager.mapper.TaskMapper;
-import com.hasbi.taskmanager.repository.ProjectRepository;
+import com.hasbi.taskmanager.project.domain.repository.ProjectRepository;
 import com.hasbi.taskmanager.repository.TaskRepository;
 import com.hasbi.taskmanager.service.impl.TaskServiceImpl;
+import com.hasbi.taskmanager.validator.TaskValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.mockito.*;
 
 import java.util.List;

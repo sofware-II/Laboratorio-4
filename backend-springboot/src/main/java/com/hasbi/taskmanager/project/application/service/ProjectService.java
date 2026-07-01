@@ -1,6 +1,6 @@
-package com.hasbi.taskmanager.service;
+package com.hasbi.taskmanager.project.application.service;
 
-import com.hasbi.taskmanager.dto.ProjectDto;
+import com.hasbi.taskmanager.project.application.dto.ProjectDto;
 
 import java.util.List;
 

@@ -2,42 +2,46 @@ package com.hasbi.taskmanager.controller;
 
 import com.hasbi.taskmanager.dto.TaskDto;
 import com.hasbi.taskmanager.service.TaskService;
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
-@AllArgsConstructor
+@RequestMapping(ApiPaths.TASKS)
+@RequiredArgsConstructor
 public class TaskController {
 
-    private TaskService taskService;
+    private final TaskService taskService;
 
-    @PostMapping("/add")
-    public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
-        return ResponseEntity.ok(taskService.createTask(taskDto));
+    @PostMapping(ApiPaths.TASKS_ADD)
+    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
+        return ControllerResponseBuilder.ok(taskService.createTask(taskDto));
     }
 
-    @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<TaskDto>> getTasksByProjectId(@PathVariable Long projectId) {
-        return ResponseEntity.ok(taskService.getTasksByProjectId(projectId));
+    @GetMapping(ApiPaths.TASKS_BY_PROJECT)
+    public ResponseEntity<List<TaskDto>> getTasksByProjectId(
+            @PathVariable(ApiPaths.PROJECT_ID) Long projectId) {
+        return ControllerResponseBuilder.ok(taskService.getTasksByProjectId(projectId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(taskService.getTaskById(id));
+    @GetMapping(ApiPaths.TASKS_BY_ID)
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable(ApiPaths.ID) Long id) {
+        return ControllerResponseBuilder.ok(taskService.getTaskById(id));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @RequestBody TaskDto taskDto) {
-        return ResponseEntity.ok(taskService.updateTask(id, taskDto));
+    @PutMapping(ApiPaths.TASKS_UPDATE)
+    public ResponseEntity<TaskDto> updateTask(
+            @PathVariable(ApiPaths.ID) Long id,
+            @Valid @RequestBody TaskDto taskDto) {
+        return ControllerResponseBuilder.ok(taskService.updateTask(id, taskDto));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+    @DeleteMapping(ApiPaths.TASKS_DELETE)
+    public ResponseEntity<Void> deleteTask(@PathVariable(ApiPaths.ID) Long id) {
         taskService.deleteTask(id);
-        return ResponseEntity.noContent().build();
+        return ControllerResponseBuilder.noContent();
     }
 }

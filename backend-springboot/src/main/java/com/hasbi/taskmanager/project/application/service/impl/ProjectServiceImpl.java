@@ -1,11 +1,11 @@
-package com.hasbi.taskmanager.service.impl;
+package com.hasbi.taskmanager.project.application.service.impl;
 
-import com.hasbi.taskmanager.dto.ProjectDto;
-import com.hasbi.taskmanager.entity.Project;
+import com.hasbi.taskmanager.project.application.dto.ProjectDto;
+import com.hasbi.taskmanager.project.application.mapper.ProjectMapper;
+import com.hasbi.taskmanager.project.application.service.ProjectService;
+import com.hasbi.taskmanager.project.domain.model.Project;
+import com.hasbi.taskmanager.project.domain.repository.ProjectRepository;
 import com.hasbi.taskmanager.exception.ResourceNotFoundException;
-import com.hasbi.taskmanager.mapper.ProjectMapper;
-import com.hasbi.taskmanager.repository.ProjectRepository;
-import com.hasbi.taskmanager.service.ProjectService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -19,11 +19,10 @@ import java.util.stream.Collectors;
 @Transactional
 @AllArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
-    private ProjectRepository projectRepository;
-    private ProjectMapper projectMapper;
+    private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectServiceImpl.class);
-
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
@@ -61,22 +60,18 @@ public class ProjectServiceImpl implements ProjectService {
         Project existingProject = projectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + id));
 
-        updateProjectProperties(existingProject, projectDto);
-
-        Project updated = projectRepository.save(existingProject);
-
-        logger.info("Updated project ID {}", updated.getId());
-
-        return projectMapper.toDto(updated);
-    }
-
-    private void updateProjectProperties(Project existingProject, ProjectDto projectDto) {
         if (projectDto.getName() != null) {
             existingProject.setName(projectDto.getName());
         }
         if (projectDto.getDescription() != null) {
             existingProject.setDescription(projectDto.getDescription());
         }
+
+        Project updated = projectRepository.save(existingProject);
+
+        logger.info("Updated project ID {}", updated.getId());
+
+        return projectMapper.toDto(updated);
     }
 
     @Override

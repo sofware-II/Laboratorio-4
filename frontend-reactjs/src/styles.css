@@ -73,13 +73,13 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #30cddf;
+  background-color: #2563eb;
   color: white;
   transition: background-color 0.2s ease-in-out;
 }
 
 button:hover {
-  background-color: #45c1eb;
+  background-color: #1d4ed8;
 }
 
 button:disabled {

@@ -1,9 +1,10 @@
 package com.hasbi.taskmanager.repository;
 
-import com.hasbi.taskmanager.entity.Project;
+import com.hasbi.taskmanager.project.domain.model.Project;
 import com.hasbi.taskmanager.entity.Task;
 import com.hasbi.taskmanager.enums.TaskPriority;
 import com.hasbi.taskmanager.enums.TaskStatus;
+import com.hasbi.taskmanager.project.infrastructure.persistence.SpringDataProjectRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -30,7 +31,7 @@ class TaskRepositoryTest {
     private TaskRepository taskRepository;
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private SpringDataProjectRepository projectRepository;
 
     // Helper methods to eliminate duplication
     private Project createTestProject(String name) {
