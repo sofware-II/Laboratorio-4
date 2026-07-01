@@ -1,0 +1,2 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1782926387513,42,GET /projects/all,Non HTTP response code: java.lang.IllegalArgumentException,Non HTTP response message: port out of range:98081,Thread Group 1-1,text,false,,2014,0,1,1,http://localhost:98081/projects/all,0,0,42

@@ -1,0 +1,9 @@
+=== curl frontend ===
+Frontend (http://localhost:3000): HTTP 200
+Swagger (http://localhost:8080/swagger-ui/index.html): HTTP 200
+API proyectos (http://localhost:8080/projects/all): HTTP 200
+
+=== POST proyecto de prueba ===
+{"id":2,"name":"Evidencia Docker","description":"Proyecto creado desde contenedor"}
+=== GET proyectos ===
+[{"id":1,"name":"Proyecto Docker","description":"Prueba desde contenedor"},{"id":2,"name":"Evidencia Docker","description":"Proyecto creado desde contenedor"}]
