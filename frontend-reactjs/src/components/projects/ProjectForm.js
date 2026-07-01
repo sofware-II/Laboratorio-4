@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const ProjectForm = ({ onSubmit, onCancel, initialData = null }) => {
   const [name, setName] = useState('');
@@ -45,6 +46,15 @@ const ProjectForm = ({ onSubmit, onCancel, initialData = null }) => {
       </div>
     </form>
   );
+};
+
+ProjectForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  initialData: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+  }),
 };
 
 export default ProjectForm;
