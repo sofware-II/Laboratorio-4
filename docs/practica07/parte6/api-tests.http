@@ -1,0 +1,75 @@
+### Project Requests
+
+GET http://localhost:8080/projects/all
+Accept: application/json
+
+###
+
+POST http://localhost:8080/projects/add
+Content-Type: application/json
+
+{
+  "name": "New Website Development",
+  "description": "Develop the new corporate website"
+}
+
+###
+
+GET http://localhost:8080/projects/1
+Accept: application/json
+
+###
+
+PUT http://localhost:8080/projects/update/1
+Content-Type: application/json
+
+{
+  "name": "New Website Development V2",
+  "description": "Updated description"
+}
+
+###
+
+DELETE http://localhost:8080/projects/delete/1
+
+###
+
+### Task Requests
+
+POST http://localhost:8080/tasks/add
+Content-Type: application/json
+
+{
+  "title": "Design Homepage",
+  "description": "Create the wireframe for homepage",
+  "status": "TODO",
+  "priority": "HIGH",
+  "projectId": 1
+}
+
+###
+
+GET http://localhost:8080/tasks/project/1
+Accept: application/json
+
+###
+
+GET http://localhost:8080/tasks/1
+Accept: application/json
+
+###
+
+PUT http://localhost:8080/tasks/update/1
+Content-Type: application/json
+
+{
+  "title": "Design Homepage",
+  "description": "Create the wireframe for homepage",
+  "status": "IN_PROGRESS",
+  "priority": "HIGH",
+  "projectId": 1
+}
+
+###
+
+DELETE http://localhost:8080/tasks/delete/1

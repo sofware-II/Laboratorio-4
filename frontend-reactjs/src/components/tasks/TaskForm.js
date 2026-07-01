@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const statusOptions = ['TODO', 'IN_PROGRESS', 'DONE'];
 const priorityOptions = ['LOW', 'MEDIUM', 'HIGH'];
@@ -71,6 +72,18 @@ const TaskForm = ({ onSubmit, onCancel, initialData = null, projectId }) => {
       </div>
     </form>
   );
+};
+
+TaskForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
+  initialData: PropTypes.shape({
+    title: PropTypes.string,
+    description: PropTypes.string,
+    status: PropTypes.string,
+    priority: PropTypes.string,
+  }),
+  projectId: PropTypes.number,
 };
 
 export default TaskForm;

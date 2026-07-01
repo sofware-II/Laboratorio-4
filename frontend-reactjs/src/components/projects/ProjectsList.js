@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { FiEdit, FiTrash2, FiEye} from 'react-icons/fi';
 
-const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
+const ProjectsList = ({ projects = [], onSelect, onEdit, onDelete }) => {
   
   return (
     <table className="project-table">
@@ -59,6 +60,13 @@ const ProjectsList = ({ projects, onSelect, onEdit, onDelete }) => {
       </tbody>
     </table>
   );
+};
+
+ProjectsList.propTypes = {
+  projects: PropTypes.array,
+  onSelect: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default ProjectsList;
