@@ -1,0 +1,226 @@
+LABORATORIO 7 - RESUMEN DDD DEL SISTEMA TASK MANAGER
+
+1. INTRODUCCION
+
+El Laboratorio 7 tiene como finalidad resumir el analisis y rediseño del sistema Task Manager, desarrollado con Spring Boot en el backend y React en el frontend. El trabajo se enfoca en comprender el dominio del sistema, identificar deuda tecnica y proponer una arquitectura modular basada en Domain-Driven Design (DDD).
+
+El sistema permite gestionar proyectos y tareas. Un proyecto agrupa actividades de trabajo, mientras que una tarea representa una actividad especifica asociada a un proyecto.
+
+2. OBJETIVO DEL LABORATORIO
+
+El objetivo principal fue analizar el proyecto actual y preparar su evolucion desde una arquitectura monolitica tradicional hacia un monolito modular.
+
+Para ello se trabajaron los siguientes puntos:
+- Analisis de calidad con SonarQube.
+- Revision manual de deuda tecnica.
+- Definicion del lenguaje ubicuo.
+- Modelo de dominio general.
+- Identificacion de entidades, objetos de valor, agregados y relaciones.
+- Propuesta de modulos principales.
+- Definicion de bounded contexts.
+- Propuesta gradual hacia microservicios.
+- Validacion de comunicacion frontend-backend mediante API REST.
+
+3. DISTRIBUCION GENERAL DEL TRABAJO
+
+Integrante 1: Analisis SonarQube, deuda tecnica y lenguaje ubicuo.
+Integrante 2: Modelo de dominio general, DDD y diagramas.
+Integrante 3: Rediseño del modulo Project.
+Integrante 4: Rediseño del modulo Task.
+Integrante 5: Bounded contexts, dependencias y microservicios.
+Integrante 6: Frontend, API REST, pruebas e integracion.
+
+4. ANALISIS CON SONARQUBE
+
+Se realizo un analisis de calidad del codigo con SonarQube para identificar problemas de confiabilidad, mantenibilidad, seguridad, cobertura y duplicacion.
+
+Resultados generales:
+- Quality Gate: Passed.
+- Security Issues: 0.
+- Reliability Issues: 23.
+- Maintainability Issues: 25.
+- Coverage: 0.0%.
+- Duplications: 0.0%.
+- Security Hotspots: 0.
+
+Interpretacion:
+El proyecto supera el Quality Gate, pero presenta deuda tecnica principalmente en mantenibilidad y confiabilidad. Los problemas mas visibles se relacionan con validaciones en frontend, organizacion del codigo y configuracion de cobertura.
+
+5. REVISION MANUAL COMPLEMENTARIA
+
+Ademas de SonarQube, se hizo una revision manual del codigo. Esta revision permitio detectar aspectos que una herramienta automatica no siempre identifica.
+
+Problemas principales encontrados:
+- Falta de separacion clara por modulos de dominio.
+- Lenguaje ubicuo no documentado formalmente.
+- Dependencia entre Task y Project.
+- Cobertura de pruebas no reflejada correctamente.
+- Necesidad de reforzar el desacoplamiento frontend-backend mediante API REST.
+
+6. LENGUAJE UBICUO
+
+El lenguaje ubicuo define los terminos comunes usados por el equipo, el codigo y la documentacion.
+
+Terminos principales:
+- Project: unidad que agrupa tareas relacionadas con un objetivo.
+- Task: actividad especifica asociada a un proyecto.
+- TaskStatus: estado de avance de una tarea.
+- TaskPriority: prioridad asignada a una tarea.
+- Project Management: contexto encargado de gestionar proyectos.
+- Task Management: contexto encargado de gestionar tareas.
+- Shared Kernel: elementos compartidos entre modulos.
+- API REST: mecanismo de comunicacion entre React y Spring Boot.
+
+7. MODELO DE DOMINIO GENERAL
+
+El dominio principal del sistema es la gestion de proyectos y tareas.
+
+Entidades principales:
+- Project: representa un proyecto dentro del sistema. Sus atributos principales son id, name y description.
+- Task: representa una tarea asociada a un proyecto. Sus atributos principales son id, title, description, status, priority y project.
+
+Objetos de valor:
+- TaskStatus: define el estado de una tarea. Valores: TODO, IN_PROGRESS y DONE.
+- TaskPriority: define la prioridad de una tarea. Valores: LOW, MEDIUM y HIGH.
+
+Relacion principal:
+Project 1 ---- * Task
+
+Esto significa que un proyecto puede tener varias tareas, pero cada tarea pertenece a un unico proyecto.
+
+8. AGREGADOS IDENTIFICADOS
+
+Agregado Project:
+- Aggregate Root: Project.
+- Responsabilidad: gestionar la informacion principal de un proyecto.
+
+Agregado Task:
+- Aggregate Root: Task.
+- Responsabilidad: gestionar la informacion individual de una tarea, incluyendo estado, prioridad y relacion con un proyecto.
+
+9. PROPUESTA DE ARQUITECTURA MODULAR
+
+El proyecto esta organizado originalmente por capas tecnicas como controller, dto, entity, repository, service, mapper y validator.
+
+Aunque esta estructura funciona, no separa claramente los modulos segun el dominio. Por ello se propone una arquitectura basada en modulos:
+
+- Project Management: gestionar proyectos.
+- Task Management: gestionar tareas asociadas a proyectos.
+- Shared Kernel: agrupar excepciones, validaciones y respuestas comunes.
+- Frontend/API: gestionar la comunicacion entre React y Spring Boot mediante API REST.
+
+Cada modulo puede organizarse internamente en capas:
+- Presentation: controladores y endpoints REST.
+- Application: casos de uso y servicios de aplicacion.
+- Domain: entidades, objetos de valor y reglas de negocio.
+- Infrastructure: persistencia e integraciones tecnicas.
+
+10. MODULO PROJECT
+
+El modulo Project se encarga de administrar los proyectos del sistema.
+
+Operaciones principales:
+- Crear proyecto.
+- Listar proyectos.
+- Buscar proyecto por ID.
+- Actualizar proyecto.
+- Eliminar proyecto.
+
+Este modulo pertenece al contexto Project Management y puede evolucionar como modulo independiente dentro del monolito modular.
+
+11. MODULO TASK
+
+El modulo Task se encarga de administrar las tareas asociadas a proyectos.
+
+Operaciones principales:
+- Crear tarea.
+- Listar tareas por proyecto.
+- Buscar tarea por ID.
+- Actualizar tarea.
+- Eliminar tarea.
+
+Este modulo depende de Project, ya que toda tarea debe estar asociada a un proyecto existente.
+
+12. BOUNDED CONTEXTS
+
+Los bounded contexts permiten separar responsabilidades dentro del sistema.
+
+Contextos identificados:
+- Project Management: gestiona el ciclo de vida de los proyectos.
+- Task Management: gestiona tareas asociadas a proyectos.
+- Shared Kernel: contiene elementos compartidos.
+- Frontend/API: comunica la interfaz con el backend.
+- Identity and Access: contexto propuesto para seguridad futura.
+
+La dependencia principal es Task Management -> Project Management, porque una tarea necesita validar la existencia del proyecto al que pertenece.
+
+13. PROPUESTA DE MIGRACION GRADUAL A MICROSERVICIOS
+
+No se propone convertir el sistema directamente a microservicios. Primero se plantea evolucionar hacia un monolito modular, separando responsabilidades internas.
+
+Fases sugeridas:
+- Fase 1: organizar el sistema como monolito modular.
+- Fase 2: separar identidad y acceso como servicio independiente.
+- Fase 3: extraer Task Management como microservicio.
+- Fase 4: implementar API Gateway para centralizar comunicacion.
+
+Esta estrategia evita un cambio brusco y permite mantener el sistema funcionando mientras se mejora su arquitectura.
+
+14. FRONTEND Y API REST
+
+El frontend en React se comunica con el backend en Spring Boot mediante API REST. Esta separacion permite que la interfaz no dependa directamente de la logica interna del backend.
+
+Endpoints principales:
+- GET /projects/all: listar proyectos.
+- POST /projects/add: crear proyecto.
+- PUT /projects/update/{id}: actualizar proyecto.
+- DELETE /projects/delete/{id}: eliminar proyecto.
+- GET /tasks/project/{projectId}: listar tareas por proyecto.
+- POST /tasks/add: crear tarea.
+- PUT /tasks/update/{id}: actualizar tarea.
+- DELETE /tasks/delete/{id}: eliminar tarea.
+
+15. PRUEBAS REALIZADAS
+
+Backend:
+- mvn clean test.
+- mvn clean install.
+
+Frontend:
+- npm install.
+- npm test.
+- npm run build.
+
+Estas pruebas permitieron validar compilacion, ejecucion de pruebas y build del proyecto.
+
+16. ENTREGABLES
+
+- LAB7 resumido: docs/LAB7_resumen_DDD.txt
+- Diagramas DDD: docs/diagrams/
+- Evidencias y capturas: docs/integrante-2-ddd/evidencias/
+- Resumen para README: Google Docs.
+- Codigo fuente backend: backend-springboot/
+- Codigo fuente frontend: frontend-reactjs/
+
+17. CUMPLIMIENTO DE LA CONSIGNA
+
+Puntos cubiertos:
+1. Inspeccion de calidad con SonarQube.
+2. Reporte de issues.
+3. Revision manual complementaria.
+4. Lenguaje ubicuo.
+5. Identificacion de modulos relevantes.
+6. Modelo de dominio general.
+7. Bounded contexts.
+8. Dependencias entre modulos.
+9. Propuesta gradual de microservicios.
+10. Arquitectura en capas.
+11. Desacoplamiento frontend-backend mediante API REST.
+
+18. CONCLUSION
+
+El Laboratorio 7 permitio analizar la calidad del sistema Task Manager y proponer una mejora arquitectonica basada en DDD.
+
+El sistema fue comprendido desde su dominio principal: la gestion de proyectos y tareas. Se identificaron entidades, objetos de valor, agregados, modulos y bounded contexts.
+
+Como resultado, el proyecto queda preparado para evolucionar desde un monolito tradicional hacia un monolito modular, con posibilidad de una migracion gradual a microservicios en el futuro.
