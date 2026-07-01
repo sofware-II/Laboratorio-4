@@ -55,3 +55,57 @@ Se registra como mejora pendiente incrementar la cobertura de pruebas unitarias 
 
 ```text
 Jenkinsfile
+
+# Pipeline CI/CD con Jenkins
+
+## Objetivo
+
+Automatizar la construcción, pruebas y análisis del proyecto Task Manager mediante Jenkins.
+
+## Etapas del pipeline inicial
+
+| Stage | Descripción |
+|---|---|
+| Checkout | Descarga el código desde GitHub |
+| Verify Tools | Verifica Java, Maven, Node, npm, Git y SonarScanner |
+| Backend - Unit Tests | Ejecuta pruebas unitarias del backend |
+| Frontend - Build | Construye el frontend React |
+| SonarQube Analysis | Ejecuta análisis estático con SonarQube |
+
+## Etapas condicionales
+
+| Stage | Estado inicial |
+|---|---|
+| Functional Tests - Selenium | Desactivado hasta integración |
+| Performance Tests - JMeter | Desactivado hasta que exista el archivo .jmx |
+| Docker Build | Desactivado hasta que exista docker-compose.yml |
+
+## Observación
+
+El pipeline inicial se ejecuta sobre la rama `feature/final-pipeline-project-management`.  
+Cuando las demás ramas sean integradas en `desarrollo`, el pipeline se ejecutará nuevamente sobre la rama `desarrollo`.
+## Resultado de ejecución inicial
+
+El pipeline inicial fue ejecutado correctamente desde Jenkins sobre la rama `feature/final-pipeline-project-management`.
+
+### Etapas ejecutadas
+
+| Etapa | Resultado |
+|---|---|
+| Checkout | Correcto |
+| Verify Tools | Correcto |
+| Backend - Unit Tests | Correcto |
+| Frontend - Build | Correcto |
+| SonarQube Analysis | Correcto |
+| Functional Tests - Selenium | No ejecutado en esta primera integración |
+| Performance Tests - JMeter | No ejecutado en esta primera integración |
+| Docker Build | No ejecutado en esta primera integración |
+
+### Evidencia principal
+
+- Backend: compilación y pruebas unitarias ejecutadas correctamente.
+- Frontend: build generado correctamente.
+- SonarQube: análisis estático ejecutado correctamente.
+- Pipeline: finalizó con estado exitoso.
+
+Las etapas de Selenium, JMeter y Docker quedaron parametrizadas para ejecutarse cuando las ramas correspondientes sean integradas a `desarrollo`.
