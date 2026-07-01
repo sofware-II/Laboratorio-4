@@ -3,6 +3,8 @@ package com.hasbi.taskmanager.entity;
 import com.hasbi.taskmanager.enums.TaskPriority;
 import com.hasbi.taskmanager.enums.TaskStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,9 +22,11 @@ public class Task {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private TaskStatus status;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private TaskPriority priority;
 
     @ManyToOne

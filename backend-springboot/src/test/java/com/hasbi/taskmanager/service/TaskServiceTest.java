@@ -10,6 +10,7 @@ import com.hasbi.taskmanager.mapper.TaskMapper;
 import com.hasbi.taskmanager.repository.ProjectRepository;
 import com.hasbi.taskmanager.repository.TaskRepository;
 import com.hasbi.taskmanager.service.impl.TaskServiceImpl;
+import com.hasbi.taskmanager.validator.TaskValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
