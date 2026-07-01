@@ -19,6 +19,11 @@ pipeline {
             defaultValue: false,
             description: 'Ejecutar construcción y despliegue con Docker'
         )
+        booleanParam(
+            name: 'RUN_ZAP',
+            defaultValue: false,
+            description: 'Ejecutar análisis de seguridad con OWASP ZAP'
+)
     }
 
     environment {
@@ -155,7 +160,41 @@ pipeline {
                 }
             }
         }
+        stage('Security Scan - OWASP ZAP') {
+    when {
+        expression {
+            return params.RUN_DOCKER && params.RUN_ZAP
+        }
+    }
 
+    steps {
+        bat '''
+        if not exist docs\\security mkdir docs\\security
+
+        docker pull ghcr.io/zaproxy/zaproxy:stable
+
+        docker run --rm ^
+        -v "%cd%\\docs\\security:/zap/wrk/:rw" ^
+        ghcr.io/zaproxy/zaproxy:stable ^
+        zap-baseline.py ^
+        -t http://host.docker.internal:8080 ^
+        -r zap-report.html
+
+        if exist docs\\security\\zap-report.html (
+            echo Reporte generado correctamente.
+        ) else (
+            echo Error al generar el reporte.
+            exit /b 1
+        )
+        '''
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'docs/security/zap-report.html', allowEmptyArchive: true
+        }
+    }
+}
         stage('Performance Tests - JMeter') {
             when {
                 expression {
