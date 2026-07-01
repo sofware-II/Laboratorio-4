@@ -1,0 +1,16 @@
+=== docker compose logs backend (ultimas 15 lineas) ===
+taskmanager-backend  | 2026-07-01T16:26:04.983Z  INFO 1 --- [taskManager] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+taskmanager-backend  | 2026-07-01T16:26:04.983Z  INFO 1 --- [taskManager] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+taskmanager-backend  | 2026-07-01T16:26:04.984Z  INFO 1 --- [taskManager] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+taskmanager-backend  | Hibernate: select p1_0.id,p1_0.description,p1_0.name from project p1_0
+taskmanager-backend  | 2026-07-01T16:26:20.332Z  INFO 1 --- [taskManager] [nio-8080-exec-7] c.h.t.p.a.s.impl.ProjectServiceImpl      : Fetched 0 projects
+taskmanager-backend  | Hibernate: select p1_0.id,p1_0.description,p1_0.name from project p1_0
+taskmanager-backend  | 2026-07-01T16:26:20.348Z  INFO 1 --- [taskManager] [nio-8080-exec-9] c.h.t.p.a.s.impl.ProjectServiceImpl      : Fetched 0 projects
+taskmanager-backend  | Hibernate: insert into project (description,name) values (?,?)
+taskmanager-backend  | 2026-07-01T16:26:20.397Z  INFO 1 --- [taskManager] [nio-8080-exec-1] c.h.t.p.a.s.impl.ProjectServiceImpl      : Created project with ID 1
+taskmanager-backend  | Hibernate: select p1_0.id,p1_0.description,p1_0.name from project p1_0
+taskmanager-backend  | 2026-07-01T16:28:25.372Z  INFO 1 --- [taskManager] [nio-8080-exec-9] c.h.t.p.a.s.impl.ProjectServiceImpl      : Fetched 1 projects
+taskmanager-backend  | Hibernate: insert into project (description,name) values (?,?)
+taskmanager-backend  | 2026-07-01T16:28:25.403Z  INFO 1 --- [taskManager] [nio-8080-exec-1] c.h.t.p.a.s.impl.ProjectServiceImpl      : Created project with ID 2
+taskmanager-backend  | Hibernate: select p1_0.id,p1_0.description,p1_0.name from project p1_0
+taskmanager-backend  | 2026-07-01T16:28:25.422Z  INFO 1 --- [taskManager] [nio-8080-exec-3] c.h.t.p.a.s.impl.ProjectServiceImpl      : Fetched 2 projects
