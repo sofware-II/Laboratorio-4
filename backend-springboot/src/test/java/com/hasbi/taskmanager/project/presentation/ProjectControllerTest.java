@@ -1,8 +1,9 @@
-package com.hasbi.taskmanager.controller;
+package com.hasbi.taskmanager.project.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hasbi.taskmanager.dto.ProjectDto;
-import com.hasbi.taskmanager.service.ProjectService;
+import com.hasbi.taskmanager.project.application.dto.ProjectDto;
+import com.hasbi.taskmanager.project.application.service.ProjectService;
+import com.hasbi.taskmanager.controller.ApiPaths;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

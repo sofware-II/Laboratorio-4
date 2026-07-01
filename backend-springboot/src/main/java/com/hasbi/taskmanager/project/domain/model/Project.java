@@ -1,4 +1,4 @@
-package com.hasbi.taskmanager.entity;
+package com.hasbi.taskmanager.project.domain.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

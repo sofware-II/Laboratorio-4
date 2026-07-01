@@ -1,7 +1,9 @@
-package com.hasbi.taskmanager.controller;
+package com.hasbi.taskmanager.project.presentation;
 
-import com.hasbi.taskmanager.dto.ProjectDto;
-import com.hasbi.taskmanager.service.ProjectService;
+import com.hasbi.taskmanager.project.application.dto.ProjectDto;
+import com.hasbi.taskmanager.project.application.service.ProjectService;
+import com.hasbi.taskmanager.controller.ApiPaths;
+import com.hasbi.taskmanager.controller.ControllerResponseBuilder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,10 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectService projectService;
+
     @PostMapping(ApiPaths.PROJECTS_ADD)
     public ResponseEntity<ProjectDto> createProject(@Valid @RequestBody ProjectDto projectDto) {
-      return ControllerResponseBuilder.ok(projectService.createProject(projectDto));
+        return ControllerResponseBuilder.ok(projectService.createProject(projectDto));
     }
 
     @GetMapping(ApiPaths.PROJECTS_ALL)

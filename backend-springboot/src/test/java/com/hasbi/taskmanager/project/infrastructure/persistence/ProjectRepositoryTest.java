@@ -1,6 +1,6 @@
-package com.hasbi.taskmanager.repository;
+package com.hasbi.taskmanager.project.infrastructure.persistence;
 
-import com.hasbi.taskmanager.entity.Project;
+import com.hasbi.taskmanager.project.domain.model.Project;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ProjectRepositoryTest {
 
     @Autowired
-    private ProjectRepository projectRepository;
+    private SpringDataProjectRepository projectRepository;
 
     // Helper method to eliminate duplication
     private Project createTestProject(String name, String description) {

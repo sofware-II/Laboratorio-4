@@ -1,4 +1,4 @@
-package com.hasbi.taskmanager.dto;
+package com.hasbi.taskmanager.project.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
