@@ -10,6 +10,7 @@ import com.hasbi.taskmanager.mapper.TaskMapper;
 import com.hasbi.taskmanager.project.domain.repository.ProjectRepository;
 import com.hasbi.taskmanager.repository.TaskRepository;
 import com.hasbi.taskmanager.service.TaskService;
+import com.hasbi.taskmanager.validator.TaskValidator;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
