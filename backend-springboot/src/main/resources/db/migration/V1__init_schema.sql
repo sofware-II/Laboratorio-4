@@ -4,7 +4,7 @@
 -- =======================
 
 CREATE TABLE IF NOT EXISTS project (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT
 );
@@ -13,7 +13,7 @@ CREATE TYPE task_status AS ENUM ('TODO', 'IN_PROGRESS', 'DONE');
 CREATE TYPE task_priority AS ENUM ('LOW', 'MEDIUM', 'HIGH');
 
 CREATE TABLE IF NOT EXISTS task (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     status task_status NOT NULL,

@@ -1,0 +1,390 @@
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================
+% PAQUETES
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{sectsty}
+\usepackage{enumitem}
+
+% ============================================================
+% COLORES
+% ============================================================
+\definecolor{darkblue}{RGB}{0, 51, 102}
+\definecolor{lightblue}{RGB}{204, 229, 255}
+
+% ============================================================
+% CONFIGURACIÓN DE HIPERVÍNCULOS
+% ============================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkblue,
+    filecolor=magenta,
+    urlcolor=darkblue
+}
+
+% ============================================================
+% ESTILO DE TÍTULOS
+% ============================================================
+\sectionfont{\color{darkblue}}
+\subsectionfont{\color{darkblue}}
+\subsubsectionfont{\color{darkblue}}
+
+% ============================================================
+% COMANDOS PERSONALIZADOS
+% ============================================================
+\newcommand{\code}[1]{\texttt{#1}}
+
+% Comando para insertar imágenes con placeholder si no existen
+\newcommand{\insertimage}[4]{
+    \begin{figure}[H]
+        \centering
+        \IfFileExists{#1}{
+            \includegraphics[
+                width=0.95\textwidth,
+                height=0.78\textheight,
+                keepaspectratio
+            ]{#1}
+        }{
+            \fbox{
+                \begin{minipage}[c][7cm][c]{0.9\textwidth}
+                    \centering
+                    \Large \textbf{Imagen no encontrada}\\[0.5cm]
+                    \normalsize #2\\[0.5cm]
+                    \small Ruta esperada: \texttt{#1}
+                \end{minipage}
+            }
+        }
+        \caption{#3}
+        \label{#4}
+    \end{figure}
+}
+
+% Comando para insertar cuadros capturados como imagen
+\newcommand{\insertcuadro}[3]{
+    \begin{figure}[H]
+        \centering
+        \IfFileExists{#1}{
+            \includegraphics[
+                width=0.98\textwidth,
+                height=0.82\textheight,
+                keepaspectratio
+            ]{#1}
+        }{
+            \fbox{
+                \begin{minipage}[c][7cm][c]{0.9\textwidth}
+                    \centering
+                    \Large \textbf{Cuadro no encontrado}\\[0.5cm]
+                    \small Ruta esperada: \texttt{#1}
+                \end{minipage}
+            }
+        }
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+}
+
+% Comando para insertar capturas de código
+\newcommand{\insertcodeimage}[3]{
+    \begin{figure}[H]
+        \centering
+        \IfFileExists{#1}{
+            \includegraphics[
+                width=0.98\textwidth,
+                height=0.82\textheight,
+                keepaspectratio
+            ]{#1}
+        }{
+            \fbox{
+                \begin{minipage}[c][7cm][c]{0.9\textwidth}
+                    \centering
+                    \Large \textbf{Código no encontrado}\\[0.5cm]
+                    \small Ruta esperada: \texttt{#1}
+                \end{minipage}
+            }
+        }
+        \caption{#2}
+        \label{#3}
+    \end{figure}
+}
+
+% ============================================================
+% DOCUMENTO
+% ============================================================
+\begin{document}
+
+\begin{center}
+    {\Huge \color{darkblue} \textbf{Trabajo del Integrante 6: Frontend, API REST, pruebas e integración}} \\[1cm]
+\end{center}
+
+% ============================================================
+\section{Datos Generales}
+
+\insertcuadro
+{imagenes/cuadro1.png}
+{Datos generales del trabajo del integrante 6}
+{cuadro:datos_generales}
+
+% ============================================================
+\section{Objetivo de la Parte 6}
+
+El objetivo principal es implementar y evidenciar el desacoplamiento total entre el frontend y el backend mediante el uso de una API REST. Esto implica configurar la integración para el consumo de datos reales, sustituyendo los datos quemados o simulados, validar los endpoints generados, comprobar su comportamiento mediante pruebas y capturar de forma verificable el funcionamiento del sistema en conjunto.
+
+% ============================================================
+\section{Relación con las partes anteriores}
+
+Este trabajo funge como la capa de consolidación e integración de todo el proyecto:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item Se apoya de forma directa en el \textbf{modelo de dominio} diseñado por el integrante 2, respetando las entidades de \code{Project} y \code{Task}.
+    
+    \item Consume activamente los módulos refactorizados de \code{Project}, correspondiente al integrante 3, y \code{Task}, correspondiente al integrante 4, interactuando con los controladores expuestos.
+    
+    \item Se alinea con los \textbf{Bounded Contexts} propuestos por el integrante 5, ya que la comunicación desde el frontend se realiza mediante peticiones discretas a la API REST, manteniendo los límites de contexto. En este caso, \code{projectId} actúa como puente relacional sin acoplar las lógicas internas.
+\end{itemize}
+
+% ============================================================
+\section{Arquitectura de Integración}
+
+La arquitectura se basa en una separación limpia cliente-servidor comunicada a través de un protocolo sin estado, HTTP. El frontend gestiona únicamente la capa de presentación y su estado interno, delegando cualquier lógica de negocio y persistencia de dominio al backend.
+
+\insertimage
+{imagenes/0.png}
+{Figura principal de arquitectura}
+{Arquitectura de Integración Frontend-Backend mediante REST}
+{fig:arquitectura}
+
+% ============================================================
+\section{Desacoplamiento del Frontend}
+
+Para evitar un diseño monolítico y un alto acoplamiento a las rutas de red, se implementó una \textbf{capa de abstracción de red}. Esta capa permite centralizar las peticiones realizadas desde React hacia el backend.
+
+Se crearon y adaptaron los siguientes archivos para centralizar la comunicación:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \code{api.js}: instancia principal de Axios configurada por la variable de entorno \code{REACT\_APP\_API\_BASE\_URL}. Centraliza cabeceras y permite fácil inyección de JWT en el futuro.
+    
+    \item \code{projects.js}: contiene los métodos para las llamadas a la API referentes a proyectos.
+    
+    \item \code{tasks.js}: contiene los métodos correspondientes a tareas.
+\end{itemize}
+
+\subsection{Ventajas del desacoplamiento}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Mantenibilidad:} si la IP o puerto del servidor cambia, únicamente se actualiza el archivo \code{.env}, no cada componente de la interfaz.
+    
+    \item \textbf{Reutilización:} distintos componentes pueden consumir el mismo servicio sin duplicar lógica de conexión.
+    
+    \item \textbf{Tolerancia al cambio:} facilita migrar hacia una arquitectura basada en microservicios en el futuro, cambiando algunas URLs en lugar de modificar toda la capa visual.
+\end{itemize}
+
+% ============================================================
+\section{Endpoints REST Validados}
+
+\insertcuadro
+{imagenes/cuadro2.png}
+{Endpoints REST validados en el sistema}
+{cuadro:endpoints_rest}
+
+% ============================================================
+\section{Cambios principales en Frontend}
+
+\insertcuadro
+{imagenes/cuadro3.png}
+{Cambios principales realizados en el frontend}
+{cuadro:cambios_frontend}
+
+% ============================================================
+\section{Corrección de Deuda Técnica detectada por SonarQube}
+
+El uso estático e inseguro de colecciones y componentes sin validar parámetros eleva los índices de \textit{Code Smells} y \textit{Reliability Issues} reportados por herramientas como SonarQube. Por ello, se aplicaron mejoras enfocadas en validaciones, control de valores nulos y correcciones visuales.
+
+\insertcuadro
+{imagenes/cuadro4.png}
+{Corrección de deuda técnica detectada por SonarQube}
+{cuadro:deuda_tecnica}
+
+% ============================================================
+\section{Pruebas Realizadas}
+
+\subsection{Pruebas Backend}
+
+Se ejecutó una compilación completa para validar la cobertura de pruebas REST en el entorno Spring Boot.
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \code{mvn clean test}: permitió validar el conjunto de pruebas usando MockMvc en \code{ProjectControllerTest} y \code{TaskControllerTest}.
+    
+    \item \code{mvn clean install}: finalizó con \textbf{BUILD SUCCESS}, validando el esquema de datos y generando los reportes correspondientes en el proyecto.
+\end{itemize}
+
+\subsection{Pruebas Frontend}
+
+La interfaz fue validada unitariamente y reempaquetada para garantizar que no se introdujeran regresiones.
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \code{npm test -- --watchAll=false}: permitió ejecutar la suite de pruebas de React.
+    
+    \item \code{npm run build}: finalizó la compilación para producción, garantizando la integridad del empaquetado.
+\end{itemize}
+
+\subsection{Pruebas Manuales}
+
+Se comprobó el paso de mensajes de extremo a extremo:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item Navegación completa mediante React, asegurando que las acciones de crear, editar y borrar se reflejen tras recargar la página.
+    
+    \item Ejecución manual directa desde un archivo \code{api-tests.http} en VS Code sobre los endpoints de proyectos y tareas.
+\end{itemize}
+
+% ============================================================
+\section{Evidencias Funcionales}
+
+\insertcuadro
+{imagenes/cuadro5.png}
+{Relación de evidencias funcionales del sistema}
+{cuadro:evidencias_funcionales}
+
+\insertimage
+{imagenes/backend-ejecucion.png}
+{Terminal con Spring Boot}
+{Backend ejecutándose en puerto 8080}
+{fig:backend_run}
+
+\insertimage
+{imagenes/frontend-ejecucion.png}
+{Navegador en localhost:3000}
+{Frontend levantado e interfaz activa}
+{fig:frontend_run}
+
+\insertimage
+{imagenes/postman-get-projects.png}
+{Petición GET de proyectos}
+{Prueba GET proyectos}
+{fig:postman_get_projects}
+
+\insertimage
+{imagenes/postman-post-project.png}
+{Petición POST de proyecto}
+{Prueba POST proyecto}
+{fig:postman_post_project}
+
+\insertimage
+{imagenes/postman-get-tasks.png}
+{Petición GET de tareas}
+{Prueba GET tareas por proyecto}
+{fig:postman_get_tasks}
+
+\insertimage
+{imagenes/react-lista.png}
+{Listado de Projects y Tasks en React}
+{Vista React consumiendo la API REST}
+{fig:react_consuming_api}
+
+\insertimage
+{imagenes/react-crea-proyecto.png}
+{Formulario React para proyecto}
+{Creación de proyecto desde frontend}
+{fig:react_create_project}
+
+\insertimage
+{imagenes/react-crea-tarea.png}
+{Formulario React para tarea}
+{Creación de tarea desde frontend}
+{fig:react_create_task}
+
+\insertimage
+{imagenes/react-build.png}
+{Terminal con comando npm run build}
+{Build optimizado y exitoso del frontend}
+{fig:react_build}
+
+\insertimage
+{imagenes/backend-build-success.png}
+{Terminal con BUILD SUCCESS de Maven}
+{Pruebas y build exitoso del backend}
+{fig:backend_tests}
+
+% ============================================================
+\section{Fragmentos de Código Relevantes}
+
+En esta sección se presentan los fragmentos de código más importantes empleados en la integración entre el frontend y el backend.
+
+\subsection{Configuración dinámica de API}
+
+\insertcodeimage
+{imagenes/code1.png}
+{Configuración dinámica de API en api.js}
+{code:api_js}
+
+\subsection{Implementación de PropTypes de defensa en listas}
+
+\insertcodeimage
+{imagenes/code2.png}
+{Implementación de PropTypes en TasksList.js}
+{code:taskslist_js}
+
+\subsection{Validación de Backend consumida por la API}
+
+\insertcodeimage
+{imagenes/code3.png}
+{Validación de backend en ProjectController.java}
+{code:projectcontroller_java}
+
+\subsection{Archivo de prueba REST automatizable}
+
+\insertcodeimage
+{imagenes/code4.png}
+{Archivo de prueba REST api-tests.http}
+{code:api_tests_http}
+
+% ============================================================
+\section{Resultados Obtenidos}
+
+Gracias a los pasos de integración y refactorización aplicados, se alcanzaron los siguientes logros clave:
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Frontend totalmente desacoplado:} la interfaz de usuario opera bajo un esquema cliente-servidor puro. No existen datos quemados y todas las operaciones se envían mediante peticiones HTTP.
+    
+    \item \textbf{Comunicación fluida mediante API REST:} la integración funcionó correctamente tras configurar la comunicación entre React y Spring Boot.
+    
+    \item \textbf{Aumento de confiabilidad:} las adiciones de \code{PropTypes} y protecciones contra estados inconsistentes lograron corregir defectos identificados y proteger el código contra deuda técnica.
+    
+    \item \textbf{Verificación general integral:} la ejecución satisfactoria de comandos como \code{mvn install} y \code{npm test} demuestra un estado sano del repositorio.
+\end{itemize}
+
+% ============================================================
+\section{Conclusiones}
+
+\begin{enumerate}[leftmargin=1.2cm]
+    \item La separación en capas impuesta por DDD facilita la integración con un frontend independiente porque cada contrato entre sistemas queda definido desde el controlador mediante DTOs.
+    
+    \item El uso de variables de entorno, como el archivo \code{.env} en React, es indispensable para el ciclo de desarrollo ágil, ya que evita codificar rutas o puertos directamente en múltiples archivos.
+    
+    \item La implementación de bibliotecas como \code{prop-types} en React disminuye errores de ejecución y mejora la confiabilidad de los componentes.
+    
+    \item Al definir las relaciones únicamente con identificadores de contexto, como \code{projectId}, se logra una cohesión alta y un acoplamiento bajo.
+    
+    \item Las métricas de calidad de código no solo afectan el backend; asegurar contrastes de color apropiados y protección de arreglos en el frontend también es clave para el mantenimiento del sistema.
+\end{enumerate}
+
+% ============================================================
+\section{Resumen del Aporte}
+
+\insertcuadro
+{imagenes/cuadro6.png}
+{Resumen del aporte realizado por el integrante 6}
+{cuadro:resumen_aporte}
+
+\end{document}
