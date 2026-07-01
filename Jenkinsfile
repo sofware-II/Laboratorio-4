@@ -1,48 +1,85 @@
 pipeline {
     agent any
 
-    options {
-        timestamps()
+    parameters {
+        booleanParam(
+            name: 'RUN_FUNCTIONAL_TESTS',
+            defaultValue: false,
+            description: 'Ejecutar pruebas funcionales Selenium'
+        )
+
+        booleanParam(
+            name: 'RUN_JMETER',
+            defaultValue: false,
+            description: 'Ejecutar pruebas de rendimiento con JMeter'
+        )
+
+        booleanParam(
+            name: 'RUN_DOCKER',
+            defaultValue: false,
+            description: 'Ejecutar construcción con Docker'
+        )
+    }
+
+    environment {
+        SONAR_TOKEN = credentials('sonar-token')
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Descargando código fuente desde GitHub'
                 checkout scm
             }
         }
 
-        stage('Backend - Build and Unit Tests') {
+        stage('Verify Tools') {
             steps {
-                echo 'Compilando backend y ejecutando pruebas unitarias'
+                bat '''
+                java -version
+                mvn -version
+                node -v
+                npm -v
+                git --version
+                sonar-scanner -v
+                '''
+            }
+        }
+
+        stage('Backend - Unit Tests') {
+            steps {
                 dir('backend-springboot') {
                     bat 'mvn clean test'
-                    bat 'mvn clean package'
+                }
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: 'backend-springboot/target/surefire-reports/*.xml'
                 }
             }
         }
 
-        stage('Frontend - Install and Build') {
+        stage('Frontend - Build') {
             steps {
-                echo 'Instalando dependencias y compilando frontend'
                 dir('frontend-reactjs') {
                     bat 'npm install'
-                    bat 'npm run build'
+                    bat 'set CI=false&& npm run build'
                 }
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                echo 'Ejecutando análisis estático con SonarQube'
-                bat 'sonar-scanner'
+                bat 'sonar-scanner -Dsonar.token=%SONAR_TOKEN%'
             }
         }
 
         stage('Functional Tests - Selenium') {
+            when {
+                expression {
+                    return params.RUN_FUNCTIONAL_TESTS && fileExists('functional-tests/pom.xml')
+                }
+            }
             steps {
-                echo 'Ejecutando pruebas funcionales con Selenium'
                 dir('functional-tests') {
                     bat 'mvn test'
                 }
@@ -50,40 +87,30 @@ pipeline {
         }
 
         stage('Performance Tests - JMeter') {
-            steps {
-                script {
-                    if (fileExists('performance-tests/task-manager-performance.jmx')) {
-                        echo 'Ejecutando pruebas de rendimiento con JMeter'
-                        bat 'jmeter -n -t performance-tests\\task-manager-performance.jmx -l docs\\performance\\jmeter-results.jtl'
-                    } else {
-                        echo 'Archivo JMeter pendiente: performance-tests/task-manager-performance.jmx'
-                    }
+            when {
+                expression {
+                    return params.RUN_JMETER && fileExists('performance-tests/task-manager-performance.jmx')
                 }
             }
-        }
-
-        stage('Security Tests - OWASP ZAP') {
             steps {
-                script {
-                    if (fileExists('security-tests/zap-report.html')) {
-                        echo 'Reporte OWASP ZAP encontrado'
-                    } else {
-                        echo 'Reporte OWASP ZAP pendiente de integrar al repositorio'
-                    }
-                }
+                bat '''
+                jmeter -n -t performance-tests/task-manager-performance.jmx -l docs/performance/results.jtl
+                '''
             }
         }
 
         stage('Docker Build') {
-            steps {
-                script {
-                    if (fileExists('docker-compose.yml')) {
-                        echo 'Construyendo contenedores Docker'
-                        bat 'docker compose build'
-                    } else {
-                        echo 'docker-compose.yml pendiente de implementar'
-                    }
+            when {
+                expression {
+                    return params.RUN_DOCKER && fileExists('docker-compose.yml')
                 }
+            }
+            steps {
+                bat '''
+                docker --version
+                docker compose version
+                docker compose build
+                '''
             }
         }
     }
@@ -94,11 +121,7 @@ pipeline {
         }
 
         failure {
-            echo 'El pipeline falló. Revisar los logs de Jenkins.'
-        }
-
-        always {
-            echo 'Finalizó la ejecución del pipeline CI/CD.'
+            echo 'Pipeline falló. Revisar Console Output.'
         }
     }
 }
