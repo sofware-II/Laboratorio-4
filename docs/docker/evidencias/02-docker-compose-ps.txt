@@ -1,0 +1,10 @@
+=== docker compose ps ===
+NAME                   IMAGE                                                                     COMMAND                  SERVICE    CREATED         STATUS                   PORTS
+taskmanager-backend    sha256:4b7a3bb33d2f6024f0109094652ec2821fe0b78fd9fef82fa4182cc713521b0c   "java -jar app.jar"      backend    2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+taskmanager-db         postgres:16-alpine                                                        "docker-entrypoint.s…"   db         2 minutes ago   Up 2 minutes (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+taskmanager-frontend   sha256:677eb5696d86a967f04629bba61a6988f4260661e96bbf6592b11352d493d941   "/docker-entrypoint.…"   frontend   2 minutes ago   Up 2 minutes             0.0.0.0:3000->80/tcp, [::]:3000->80/tcp
+
+=== docker images (taskmanager) ===
+laboratorio-4-backend          latest      8e7e089fc436   2 minutes ago   399MB
+laboratorio-4-frontend         latest      ff497eb794e9   2 minutes ago   94.3MB
+postgres                       16-alpine   e013e867e712   2 weeks ago     411MB

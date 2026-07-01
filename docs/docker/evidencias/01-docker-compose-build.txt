@@ -1,0 +1,22 @@
+=== docker compose build (resumen) ===
+#31 unpacking to docker.io/library/laboratorio-4-backend:latest done
+#31 DONE 0.1s
+
+#32 [frontend] exporting to image
+#32 exporting layers done
+#32 exporting manifest sha256:81800fd80744d5b3d75e770b9e5ea109ce780b7527c2aead411800aa43329c32 done
+#32 exporting config sha256:2a9586ecb3c51100ea73929f1da88e20d8940e720ff2ba56eb95b3f21cc6dfd6 done
+#32 exporting attestation manifest sha256:99d182629e57bf40cc0393997950531cb46a5e1a6eb925f2d457f925e9a17d6c 0.0s done
+#32 exporting manifest list sha256:ff497eb794e9d3dcaa2d2f0cadbca19c7c15b4ab15578af8be31bf4951a991d0 0.0s done
+#32 naming to docker.io/library/laboratorio-4-frontend:latest done
+#32 unpacking to docker.io/library/laboratorio-4-frontend:latest done
+#32 DONE 0.1s
+
+#33 [backend] resolving provenance for metadata file
+#33 DONE 0.0s
+
+#34 [frontend] resolving provenance for metadata file
+#34 DONE 0.0s
+ laboratorio-4-backend  Built
+ laboratorio-4-frontend  Built
+
